@@ -57,7 +57,7 @@ exports.addReview=function(req,res){
         {
             description:req.body.description,
             rating:req.body.rating,
-            user:req.body.user
+            //user:req.body.user
         }
     }},
     {safe:true,new:true},
@@ -76,4 +76,27 @@ exports.getReviews=function(req,res){
             res.send(err);
         res.send(reviews);
     })
+}
+
+//delete an inappropriate review by
+// authentication: admin only
+exports.deleteReview= function(req,res){
+    Route.update(
+    {name:req.params.route_no},
+    {$pull:{"reviews":{_id:req.params.review_id}}},
+    (err)=>{
+        if(err)
+            res.send(err);
+        res.json({message:"review deleted!"})
+    });
+}
+
+//xmlHttp or what ?? need attention here
+exports.typeaheadRoutes=function(req,res,next){
+    Route.find(
+        {name:{$regex: req.body.name, $options: 'i' }},(err,route)=>{
+        if (err)
+                res.send(err)
+            res.json(route);
+    });
 }

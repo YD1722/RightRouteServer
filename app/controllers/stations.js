@@ -20,7 +20,18 @@ exports.getStation= function(req,res,next){
     });
 }
 
-//after add a new station all the stations are loaded
+// find station by name 
+exports.getStationByName= function(req,res,next){
+    Station.find({station_name:req.params.station_name},(err,station)=>{
+         if(err){
+            res.send(err);
+        }else{
+            res.json(station);
+        }
+    });
+}
+
+//after add a new station all the stations are loaded or
 //this is an administrator level route and need to be authenticate
 exports.addStation= function(req,res,next){
 	Station.create({
@@ -32,7 +43,7 @@ exports.addStation= function(req,res,next){
 		Station.find((err,stations)=>{
 			if(err)
 				res.send(err)
-			res.josn(stations);
+			res.json(stations);
 		});
 	});
 }
@@ -45,8 +56,8 @@ exports.typeaheadStations=function(req,res,next){
                 res.send(err)
 
             res.json(station);
-    },(err,station)=>{
+    }/*,(err,station)=>{
         if(err)
             res.send(err)
-    });
+    }*/);
 }
