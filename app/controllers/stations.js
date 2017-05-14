@@ -40,7 +40,7 @@ exports.addStation= function(req,res,next){
 	},(err,station)=>{
 		if(err)
 			res.send(err)
-		Station.find((err,stations)=>{
+		Station.find((err,stations)=>{  // return all station
 			if(err)
 				res.send(err)
 			res.json(stations);
@@ -48,10 +48,17 @@ exports.addStation= function(req,res,next){
 	});
 }
 
+exports.deleteStation=function(req,res){
+     Station.remove({_id:req.params._id},(err)=>{
+        if(err)
+            res.send(err)
+        res.json({message:"station deleted!!"});
+    });
+}
 //xmlHttp request?? need attention here :\
 exports.typeaheadStations=function(req,res,next){
 	Station.find(
-		{station_name:{$regex: req.body.var, $options: 'i' }},(err,station)=>{
+		{station_name:{$regex: req.body.var, $options:"i"}},(err,station)=>{
         if (err)
                 res.send(err)
 

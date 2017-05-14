@@ -134,4 +134,25 @@ exports.roleAuthorization = function(roles){
     }
 }
 
+exports.addReview=function(req,res){
+
+    User.update({_id:req.params.user_id},
+
+    {$push:{"reviews":
+        {
+            description:req.body.description,
+            rating:req.body.rating,
+            route_number:req.body.route_number,
+        }
+    }},
+    {safe:true,new:true},
+    (err,route)=>{
+        if(err)
+            res.send(err)
+        res.send({message:"review updated succesfully"});  // need to modify to send all reviews?? or what
+        
+    }
+    )
+}
+
 

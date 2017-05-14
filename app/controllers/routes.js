@@ -22,6 +22,16 @@ exports.getRoute=function(req,res,next){
     });
 }
 
+exports.find_busses_from= function(req,res,next){
+    Route.find({
+        path:req.params.station_name
+    },{name:1,start:1,end:1},(err,routes)=>{
+        if(err)
+            res.send(err);
+        res.send(routes);
+    });
+}
+
 exports.getPath=function(req,res){
 	 Route.find({
         $and:[{path:req.body.p1},{path:req.body.p2}]
@@ -50,6 +60,58 @@ exports.getPath=function(req,res){
     });
 }
 
+exports.addRoute= function(req,res,next){
+    Route.create({
+        name:req.body.name,
+        start:req.body.start,
+        end:req.body.end,
+        path:req.body.path,
+        kml_path:req.body.kml_path
+    },(err,route)=>{
+        if(err){
+            if ( err.code == 11000 ) {
+                res.json({message:'station already exists!!!'});
+                return next(err);
+            }
+        return next(err);   
+        }
+        res.json({message:"succefully added a route"});
+    });
+}
+
+// need attention here
+exports.deleteRoute= function(req,res){
+    Route.remove({_id:req.params._id},(err)=>{
+        if(err)
+            res.send(err)
+        res.json({message:"route deleted"});
+    });
+}
+
+
+
+exports.updateRoute= function(req,res,next){
+    Route.findByIdAndUpdate(req.params._id,
+        { $set: 
+            { 
+                name: req.body.name,
+                kml_path: req.body.kml_path,
+                start: req.body.start,
+                end: req.body.end,
+                path:req.body.path
+
+            }
+        },
+        { new: true },(err,route)=>{
+        if(err){
+            res.send(err);    
+        }
+        res.send(route);
+    });
+}
+
+
+
 exports.addReview=function(req,res){
 	Route.update({name:req.body.routeNo},
 
@@ -57,7 +119,7 @@ exports.addReview=function(req,res){
         {
             description:req.body.description,
             rating:req.body.rating,
-            //user:req.body.user
+            user:req.user.username,
         }
     }},
     {safe:true,new:true},

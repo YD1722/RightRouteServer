@@ -4,7 +4,7 @@ var bcrypt   = require('bcrypt-nodejs');
 var UserSchema= new mongoose.Schema({ 	 
 	email: {
         type: String,
-        lowercase: true,
+        lowercase: true,  // why the hell lowercase is true here?
         unique: true,
         required: true
     },
@@ -21,7 +21,14 @@ var UserSchema= new mongoose.Schema({
         type: String,
         enum: ['normal','admin'],
         default: 'normal'
-    }
+    },
+    reviews:[
+    {
+      description:String,
+      rating:Number,
+      route_name:String,    
+      created_at:{type: Date, required: true, default: Date.now}
+    }],
 },{timestamps:true});
 
 // hashing using pre hook .before save this one get called 

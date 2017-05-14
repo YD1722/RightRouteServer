@@ -6,6 +6,7 @@ var logger = require('morgan');
 var bodyParser = require('body-parser');
 var cors = require('cors');
 
+
 var databaseConfig = require('./config/database');
 var router = require('./app/routes');
 
@@ -17,13 +18,18 @@ console.log("App listening on port 8080");
 /*// Configuration
 
 mongoose.connect('mongodb://127.0.0.1/demoCheck');*/
- 
+/*app.use(cookieParser('secret'));
+app.use(session({cookie: { maxAge: 60000 }}));
+app.use(flash());*/
+
 app.use(bodyParser.urlencoded({ extended: false })); // Parses urlencoded bodies
 app.use(bodyParser.json()); // Send JSON responses
 app.use(logger('dev')); // Log requests to API using morgan
 app.use(cors());
 
 router(app);
+
+
 
 /*// Models
 var RouteSchema=  new mongoose.Schema({
